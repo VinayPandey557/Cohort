@@ -1,29 +1,42 @@
 const express = require("express");
 
+
+
 const app = express();
 
-const users = [{
-    name: "John",
-    kidneys: [{
-        healthy: false
-    }]
-}];
+function userMiddleware(req, res, next){
+    if(username != "harkirat" && password != "pass"){
+        res.status(403).json({
+            msg: "Incorrect input",
+        });
+    } else {
+        next();
+    }
+};
 
-app.get("/", function(req, res){
-    const johnKidneys = users[0].kidneys;
-    console.log(johnKidneys);
-    const numberOfKidneys = johnKidneys.length;
-    let numberOfHealthyKidneys = 0;
-    for(let i =0; i<johnKidneys.length; i++){
-        if(johnKidneys[i].healthy){
-           numberOfHealthyKidneys = numberOfHealthyKidneys + 1;
-           }
-        }
-        const numberOfUnhealthyKidneys = numberOfKidneys - numberOfHealthyKidneys;
-        res.json({
-        johnKidneys, 
-        numberOfHealthyKidneys,
-        numberOfUnhealthyKidneys
-      })
-})
+function kidneyMiddleware(req, res, next){
+    if(kidneyId != 1 && kidneyId != 2){
+        res.status(403).json({
+            msg: "Incorrect input",
+        })
+
+    }
+    else {
+        next();
+    }
+};
+
+app.get("/healthy-checkup", userMiddleware, kidneyMiddleware, function(req, res){
+    res.send("Your heart is healthy");
+
+});
+
+app.get("/kidney-check", userMiddleware, kidneyMiddleware, function(req, res){
+    res.send("Your heart is healthy");
+});
+
+app.get("/heart-check", userMiddleware, function(req, res){
+    res.send("Your heart is healthy");
+});
+
 app.listen(5000);
