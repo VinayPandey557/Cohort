@@ -1,42 +1,19 @@
-const express = require("express");
+const zod = require("zod");
 
 
 
-const app = express();
+// if this is an array of number with atleast 1 input, return true, else return false
+function validateInput(obj){
+    const schema = zod.object({
+        email: zod.string().email(),
+        password: zod.string().min(8)
+    })
 
-function userMiddleware(req, res, next){
-    if(username != "harkirat" && password != "pass"){
-        res.status(403).json({
-            msg: "Incorrect input",
-        });
-    } else {
-        next();
-    }
-};
+    const response = schema.safeParse(obj);
+    console.log(response);
+}
 
-function kidneyMiddleware(req, res, next){
-    if(kidneyId != 1 && kidneyId != 2){
-        res.status(403).json({
-            msg: "Incorrect input",
-        })
-
-    }
-    else {
-        next();
-    }
-};
-
-app.get("/healthy-checkup", userMiddleware, kidneyMiddleware, function(req, res){
-    res.send("Your heart is healthy");
-
+validateInput({
+    email: "vibsgduis@gmail.com",
+    password: "dsbaldcbioad"
 });
-
-app.get("/kidney-check", userMiddleware, kidneyMiddleware, function(req, res){
-    res.send("Your heart is healthy");
-});
-
-app.get("/heart-check", userMiddleware, function(req, res){
-    res.send("Your heart is healthy");
-});
-
-app.listen(5000);
