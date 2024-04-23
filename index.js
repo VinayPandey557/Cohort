@@ -1,77 +1,27 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
-const jwtPassword = "123456";
-
-
 
 const app = express();
 
-app.use(express.json());
 
-const ALL_USRS = [
-    {
-        username: "harkirat@gmail.com",
-        password: '123',
-        name: "harkirat"
-    },
-    {
-        username: "vinay@gmail.com",
-        password: '123',
-        name: "Vinay"
-    },
-    {
-        username: "monu@gmail.com",
-        password: '123',
-        name: "Monu"
-    },
-];
-
-
-function userExists(username, password) {
-  const userExists= false;
-   for(let i =0; i< ALL_USRS.length; i++){
-    if(ALL_USRS[i].username == username && ALL_USRS.password == password){
-        userExists = true;
+function isOldEnough(age){
+    if(age >= 14) {
+        return true;
+    } else {
+        return false;
     }
-   }
-   return userExists;
+
 }
 
-
-
-app.post("/signin", function(req, res){
-    const username = req.body.username;
-    const password = req.body.password;
-
-    if(!userExists(username, password)){
-        return res.status(403).json({
-            msg: "User doesnt exist in our in memory db",
-        });
-    }
-    var token = jwt.sign({ username: username}, jwtPassword)
-       return res.json({
-        token,
-       });
-
-});
-
-
-app.get("/users", function(req, res) {
-    const token = req.headers.authorization;
-    const decoded = jwt.verify(token, jwtPassword);
-    const username = decoded.username;
-
+app.get("/ride1", function(req, res){
+    if(isOldEnough(req.query.age)){
     res.json({
-        users: ALL_USRS.filter(function(value){
-        if(value.username == username){
-            return false
-        } else {
-            return true;
-        }
-        })
+        msg: "You have succesfully riden the ride 1"
     })
-   
-});
+} else {
+    res.status(411).json({
+        msg: "Sorry you are not eligible yet"
+    })
+}
+})
 
-app.listen(3000);
-
+app.listen(3000)
