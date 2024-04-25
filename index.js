@@ -1,27 +1,19 @@
 const express = require("express");
-
+const zod = require("zod");
 const app = express();
 
+const schema = zod.array(zod.number());
 
-function isOldEnough(age){
-    if(age >= 14) {
-        return true;
-    } else {
-        return false;
-    }
 
-}
+app.use(express.json());
 
-app.get("/ride1", function(req, res){
-    if(isOldEnough(req.query.age)){
-    res.json({
-        msg: "You have succesfully riden the ride 1"
-    })
-} else {
-    res.status(411).json({
-        msg: "Sorry you are not eligible yet"
-    })
-}
-})
+app.post("/health-checkup", function(req, res){
+    const kidneys = req.body.kidneys;
+   const response = schema.safeParse(kidneys)
 
-app.listen(3000)
+    res.send({
+        response
+    });
+});
+
+app.listen(6000);
