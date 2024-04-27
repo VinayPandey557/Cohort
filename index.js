@@ -1,24 +1,42 @@
-const jwt = require("jsonwebtoken");
-const jwtPassword = "secret";
+const express = require("express");
 const zod = require("zod");
 
-const emailSchema = zod.string().email();
-const passwordSchema = zod.string().min(6);
 
-function signJwt(username, password){
-    const usernameResponse = emailSchema.safeParse(username);
-    const passwordResponse = passwordSchema.safeParse(password);
-    if(!usernameResponse.success || !passwordResponse.success){
-        return null;
+const app = express();
+
+function userMiddleware(req, res, next){
+    if(username != "harkirat" && password != "pass"){
+        res.status(403).json({
+            msg: "Incorrect input",
+        });
+    } else {
+        next();
     }
+};
 
-   const signature = jwt.sign({
-    username
-   }, jwtPassword)
-   return signature;
-}
+function kidneyMiddleware(req, res, next){
+    if(kidneyId != 1 && kidneyId != 2){
+        res.status(403).json({
+            msg: "Incorrect input",
+        })
 
+    }
+    else {
+        next();
+    }
+};
 
-const ans = signJwt("vinay@gmail.com", "asads")
-console.log(ans)
+app.get("/healthy-checkup", userMiddleware, kidneyMiddleware, function(req, res){
+    res.send("Your heart is healthy");
 
+});
+
+app.get("/kidney-check", userMiddleware, kidneyMiddleware, function(req, res){
+    res.send("Your heart is healthy");
+});
+
+app.get("/heart-check", userMiddleware, function(req, res){
+    res.send("Your heart is healthy");
+});
+
+app.listen(5000);
